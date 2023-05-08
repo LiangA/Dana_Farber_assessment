@@ -10,7 +10,11 @@ cd  Dana_Farber_assessment
 Put the corresponding test data into this folder, and you can start playing with the project.
 
 ## BioInformatics & Data Handling
-I used Python 3.11.2 for development, but you should be able to run it smoothly with any version of Python 3.7 or above. This assessment does not require any additional installation of packages.
+I used Python 3.11.2 for development, but you should be able to run it smoothly with any version of Python 3.9 or above. This assessment requires "requests" library be installed. Just run
+```python 
+pip install -r requirements.txt
+```
+in the project directory, and the installation should be done.
 
 For each task, the same report.py file is used for processing, and each task has a corresponding mode and required parameters. Please refer to the following instructions or enter the following command:
 ```python 
@@ -23,7 +27,6 @@ and read the document.
 The input is a directory contains at least one fastq file in it.
 
 You must use the following command to perform the test:
-你必須使用以下指令來進行測試:
 ```python
 python report.py --mode fastq --fq <directory>
 ```
@@ -145,6 +148,40 @@ GC% bin 80- 90%: 10.2835
 GC% bin 90-100%: 0.0000
 ```
 > Note: --intvl can also be replaced with --hs_intervals_directory
+
+### Task 3
+> Given a list of variant IDs, using Ensembl API retrieve information about alleles, locations, 
+effects of variants in transcripts, and genes containing the transcripts.
+
+You can use the following command to perform the test:
+```python
+python ensembl.py -v <the variant ids separated by space>
+```
+You will see output similar to the following:
+```
+variant id      transcript id   start   end     allele(s)       gene symbol     gene id consequence
+rs56116432      ENST00000453660 133256042       133256042       C/T     ABO     ENSG00000175164 non_coding_transcript_exon_v
+ariant
+rs56116432      ENST00000538324 133256042       133256042       C/T     ABO     ENSG00000175164 missense_variant
+rs56116432      ENST00000611156 133256042       133256042       C/T     ABO     ENSG00000175164 missense_variant
+rs56116432      ENST00000647353 133256042       133256042       C/T     ABO     ENSG00000175164 intron_variant
+rs56116432      ENST00000647353 133256042       133256042       C/T     ABO     ENSG00000175164 non_coding_transcript_variant
+rs56116432      ENST00000651471 133256042       133256042       C/T     ABO     ENSG00000175164 downstream_gene_variant
+rs56116432      ENST00000679909 133256042       133256042       C/T     ABO     ENSG00000175164 intron_variant
+rs56116432      ENST00000680600 133256042       133256042       C/T     ABO     ENSG00000175164 upstream_gene_variant
+rs56116432      ENST00000626615 133256189       133256189       C/T     ABO     ENSG00000281879 missense_variant
+rs56116432      ENST00000644422 133256189       133256189       C/T     ABO     ENSG00000281879 missense_variant
+rs56116432      ENST00000644755 133256189       133256189       C/T     ABO     ENSG00000281879 missense_variant
+rs56116432      ENST00000645810 133256189       133256189       C/T     ABO     ENSG00000281879 missense_variant
+COSM476         140753336       140753336       COSMIC_MUTATION
+```
+Or, you can try another way to input the variants:
+```python
+python ensembl.py -vdir <a path to a file contains variant ids separated by line>
+```
+The same output will be expected.
+
+> Note: --v can be replaced with --variants and -vdir can be replaced with --variant-directory. Exactly one of them must be provided, less or more will cause an error.
 
 ## Cloud Computing
 > 1. How would you architect a framework for sharing large files (10Gb-25Gb) on the cloud with access controls at the file level? We want to share the same file with multiple users without making a copy. The users should be able to have access to the data on any cloud platform to run bioinformatics analysis pipelines. The users can run any cloud service, there is no restriction. The framework’s responsibility is only to make data accessible with access controls.
