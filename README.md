@@ -16,7 +16,7 @@ pip install -r requirements.txt
 ```
 in the project directory, and the installation should be done.
 
-For each task, the same report.py file is used for processing, and each task has a corresponding mode and required parameters. Please refer to the following instructions or enter the following command:
+For most tasks except the Ensembl API one, the same report.py file is used for processing, and each task has a corresponding mode and required parameters. Please refer to the following instructions or enter the following command:
 ```python 
 python report.py --help
 ```
@@ -236,3 +236,42 @@ FROM Invoices
 GROUP BY UserId
 HAVING COUNT(OrderId) >= 1;
 ```
+
+## Worth mentioning
+In this section, I would like to make a note of some of the assumptions and design ideas that were incorporated into this project. 
+
+### Implementation practices
+
+1. Long naming
+
+In this project, I rarely use common abbreviations for variable names such as using "Algo" instead of "Algorithm". Instead, I try to write out the full words as much as possible. For engineers, these common abbreviations can effectively save code length and even accelerate the development process.
+
+However, I believe that for a novice programmer or a PM without a computer science background, reading code full of abbreviations is more painful. Considering their needs, I tend to write out the full word without causing the code to become too verbose. Moreover, with the help of an IDE, we do not need to type a lot more keyboard strokes to write out the full words. So why not help them a bit?
+
+2. Less-or-no comments
+
+I admit that I'm lazy to write comments. But there is an idea that I agree with and am trying to adapt: code tells you how, comments tell you why. In my previous positions, I had a bad experience that the code and the comment isn't compatible. Comment itself can be a failure point if it lacks of maintenance! And maintainence also costs time and energy. So less comments, less possible faults. It's not telling us not to write comments, but hoping that we write it when we must do it. 
+
+And I put date in comments. In a rebased code, there is a chance that we will lose the information of who and when commits the code. Putting date can remind us if this comment is too old to trust.
+
+### Design
+
+1. Builder pattern    
+
+Except for the Ensembl API task, I employ the Builder pattern in all coding tasks. In the base ReportBuilder class, I treat the output of each task as a report and define the steps (functions) as follows: assign_files, check_assigned_file_format, divide_files, map, reduce, and build. The step check_assigned_file_format is optional, as it is beneficial to format and clean the data before report generation. However, since the example input files are not thoroughly cleaned, including an optional step can be helpful. Furthermore, running the steps out of order will result in errors in the program.
+
+2. Decorator pattern
+
+The Decorator pattern is widely recognized as a powerful and popular design pattern in Python. To enhance its functionality and ease of use, I implemented a decorator called show_running_info which is capable of logging out the running message for each step. By applying this decorator to each step, I was able to avoid the hassle of manually maintaining multiple logging statements.
+
+3. Generator pattern
+
+To optimize the memory usage when dealing with large files, I have implemented a lazy file reader, which is essentially a file reading generator. It generates only the required lines of the file, without loading the entire file into memory at once. This approach is extremely beneficial in cases where the file size is very large and loading it all at once would consume a significant amount of memory resources. With this implementation, we can save a considerable amount of memory and process the file more efficiently.
+
+4. Asynchronous 
+
+In the context of the Builders, the map function is implemented as an asynchronous function. This design choice allows for the efficient generation of reports, especially in a distributed system where multiple nodes can work on different parts of the task simultaneously. By leveraging the power of cloud services, we can take full advantage of asynchronous implementation, which offers better performance compared to traditional multi-threading or multi-processing.
+
+Unlike traditional multi-threading or multi-processing implementations, which are limited by the resources of a single machine, cloud-based asynchronous implementation can dynamically allocate computing resources to different nodes based on the task's needs. This feature makes it an ideal choice for High-Performance Computing (HPC) applications, where tasks require a significant amount of computing power. By combining asynchronous implementation with cloud services, we can improve the efficiency and scalability of our report generation process, making it suitable for large-scale data processing tasks.
+
+In summary, the combination of asynchronous implementation and cloud services offers significant benefits in terms of efficiency and scalability, making it a powerful tool for HPC applications.

@@ -27,6 +27,7 @@ if args.variants is not None:
 
 
 server = "https://rest.ensembl.org"
+# 05/09/2023 I assume the species is "human" since we are in a research center of cancer.
 ext = "/vep/human/id"
 headers = {"Content-Type": "application/json", "Accept": "application/json"}
 payload_data = {"ids": variants}
